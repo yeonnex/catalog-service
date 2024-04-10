@@ -3,7 +3,7 @@ on: push # 새 코드를 저장소로 푸시하면 워크플로를 시작한다
 jobs:
   build:
     name: Build and Test # 작업의 인간 친화적 명칭
-    runs-on: ubuntu-22.04 # 작업이 실행될 머신의 유형
+    runs-on: ubuntu-latest # 작업이 실행될 머신의 유형
     permissions:
       contents: read # 현재 깃 저장소를 체크아웃할 수 있는 권한 부여
       security-events: write # 깃헙에 보안 이벤트를 제출할 수 있는 권한 부여
