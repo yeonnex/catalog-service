@@ -24,7 +24,7 @@ class BookTest {
     @Test
     @DisplayName("모든 필드가 올바를 때 검증 통과")
     void allFieldsCorrect_validationSucceeds() {
-        var book = new Book("1234567890", "test title", "test author", 9.99);
+        var book = Book.of("1234567890", "test title", "test author", 9.99);
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertThat(violations).isEmpty();
     }
@@ -32,7 +32,7 @@ class BookTest {
     @Test
     @DisplayName("ISBN 값이 있으나 형식이 잘못됐을 때 검증 실패")
     void isbnDefinedButIncorrect_validationFails() {
-        var book = new Book("a12346789", "test title", "test author", 9.00);
+        var book = Book.of("a12346789", "test title", "test author", 9.00);
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getMessage()).isEqualTo("The ISBN format must be valid.");

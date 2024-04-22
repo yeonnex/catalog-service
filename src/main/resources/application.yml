@@ -5,10 +5,40 @@ server:
     threads:
       max: 50
       min-spare: 5
+  port: 9001
 
 spring:
   application:
     name: catalog-service
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:8888
+      request-connect-timeout: 5000
+      request-read-timeout: 5000
+      fail-fast: true
+      retry:
+        max-attempts: 6
+        initial-interval: 1000
+        max-interval: 2000
+        multiplier: 1.1
+  datasource:
+    username: dataflow
+    password: dataflow
+    url: jdbc:postgresql://node01.ming.com:5432/dataflow
+    hikari:
+      connection-timeout: 2000 # 풀에서 연결 객체를 얻기 위해 기다려야하는 최대 시간 (밀리초)
+      maximum-pool-size: 5 # 히카리CP 가 풀에 최대한으로 유지할 수 있는 연결 객체의 수
+  sql:
+    init:
+      mode: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
 
 polar:
   greeting: Welcome to the "local" book catalog!
