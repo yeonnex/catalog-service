@@ -1,0 +1,4 @@
+# "integration" 프로파일이 활성화되면 기본 속성보다 높은 우선순위를 가집니다.
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:14.4:///
