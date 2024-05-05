@@ -24,8 +24,8 @@ spring:
         max-interval: 2000
         multiplier: 1.1
   datasource:
-    username: dataflow
-    password: dataflow
+    username: user
+    password: password
     url: jdbc:postgresql://node01.ming.com:5432/dataflow
     hikari:
       connection-timeout: 2000 # 풀에서 연결 객체를 얻기 위해 기다려야하는 최대 시간 (밀리초)
