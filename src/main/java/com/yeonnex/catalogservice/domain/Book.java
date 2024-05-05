@@ -30,6 +30,8 @@ public record Book(
         @Positive(message = "The book price must be greater than zero.")
         Double price,
 
+        String publisher, // 새로운 선택적 필드
+
         @CreatedDate
         Instant createdDate,
 
@@ -46,7 +48,7 @@ public record Book(
          * 결과적으로 테이블에 새 행을 삽입할 때 식별자 생성은 데이터베이스에 의존한다.
          * 값이 제공되면 이미 데이터베이스에서 객체를 찾아 업데이트할 것으로 기대된다.
          */
-        public static Book of(String isbn, String title, String author, Double price) {
-                return new Book(null, isbn, title, author, price, null,null, 0); // ID 가 null 이고 버전이 0 이면 새로운 엔티티로 인식
+        public static Book of(String isbn, String title, String author, Double price, String publisher) {
+                return new Book(null, isbn, title, author, price, publisher,null,null, 0); // ID 가 null 이고 버전이 0 이면 새로운 엔티티로 인식
         }
 }

@@ -19,7 +19,7 @@ class CatalogServiceApplicationTests {
     @Test
     @DisplayName("POST 요청으로 책을 생성")
     void postRequest_bookCreated() {
-        var expectedBook = Book.of("1234567890", "test title", "test author", 8.99);
+        var expectedBook = Book.of("1234567890", "test title", "test author", 8.99, "ming");
         webTestClient.post()
                 .uri("/books")
                 .bodyValue(expectedBook)

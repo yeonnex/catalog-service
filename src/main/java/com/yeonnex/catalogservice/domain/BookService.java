@@ -34,6 +34,7 @@ public class BookService {
                             book.title(),
                             book.author(),
                             book.price(),
+                            book.publisher(),
                             existingBook.createdDate(),
                             existingBook.lastModifiedDate(), // 기존 책 레코드의 마지막 수정날짜 사용. 업데이트가 성공하면 스프링데이터에 의해 자동으로 변경된다
                             existingBook.version()

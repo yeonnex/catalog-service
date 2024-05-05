@@ -19,7 +19,7 @@ public class BookJsonTests {
     @Test
     @DisplayName("직렬화 테스트")
     void testSerialize() throws IOException {
-        var book = Book.of("1234567890", "title", "author", 5.55);
+        var book = Book.of("1234567890", "title", "author", 5.55, "ming");
         var jsonContent = json.write(book);
         assertThat(jsonContent).extractingJsonPathStringValue("@.isbn").isEqualTo(book.isbn());
         assertThat(jsonContent).extractingJsonPathStringValue("@.title").isEqualTo(book.title());
@@ -35,11 +35,12 @@ public class BookJsonTests {
                     "isbn": "1234567890",
                     "title": "my title",
                     "author": "my author",
+                    "publisher": "ming",
                     "price": 9.99
                 }
                 """;
         assertThat(json.parse(content))
                 .usingRecursiveComparison()
-                .isEqualTo(Book.of("1234567890", "my title", "my author", 9.99));
+                .isEqualTo(Book.of("1234567890", "my title", "my author", 9.99, "ming"));
     }
 }

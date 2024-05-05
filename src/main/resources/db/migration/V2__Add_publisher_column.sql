@@ -1,0 +1,1 @@
+ALTER TABLE book AdD COLUMN publisher varchar(255);
