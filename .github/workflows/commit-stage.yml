@@ -1,5 +1,11 @@
 name: Commit Stage # 워크플로의 이름
 on: push # 새 코드를 저장소로 푸시하면 워크플로를 시작한다
+
+env:
+  REGISTRY: ghcr.io # 깃허브 컨테이너 저장소를 사용한다
+  IMAGE_NAME: yeonnex/catalog-service
+  VERSION: latest
+
 jobs:
   build:
     name: Build and Test # 작업의 인간 친화적 명칭
@@ -35,3 +41,47 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew build
+  package:
+    name: Package and Publish
+    if: ${{ github.ref == 'ref/heads/master' }} # 잡을 main 브랜치에 대해서만 실행한다
+    needs: [ build ] # 'build' 잡이 성공적으로 수행된 경우에만 이 잡을 실행한다
+    runs-on: ubuntu-22.04 # 우분투 22.04 에서 잡을 실행
+    permissions:
+      contents: read # 현재 깃 저장소를 체크아웃하기 위한 권한
+      packages: write # 깃허브 컨테이너 저장소로 이미지를 업로드하기 위한 권한
+      security-events: write # 깃허브로 보안 이벤트를 제출하기 위한 권한
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3 # 현재 깃 저장소(catalog-service)를 체크아웃 한다
+      - name: Set up JDK
+        uses: actions/setup-java@v3 # 자바 런타임을 설치하고 설정한다
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - name: Build container image
+        run: |
+          chmod +x gradlew
+          ./gradlew bootBuildImage \
+          --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+      - name: OCI image vulnerability scanning
+        uses: anchore/scan-action@v3 # 취약성 검사를 위해 그라이프를 사용해 릴리즈 후보 이미지를 스캔한다
+        id: scan
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          fail-build: false # 이미지에서 취약점이 발견되더라도 빌드를 실패로 만들지 않는다
+          severity-cutoff: high
+          acs-report-enable: true
+      - name: Upload vulnerability report
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+      - name: Log into container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }} # 깃헙 액션이 제공하는 현재 사용자의 깃헙 유저명
+          password: ${{ secrets.GITHUB_TOKEN }} # 깃헙 액션이 제공하는 저장소와 인증하기 위한 토큰
+      - name: Publish container image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} # 릴리즈 후보를 저장소로 푸시한다
