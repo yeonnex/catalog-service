@@ -59,12 +59,6 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
-      - name: Log into container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }} # 깃헙 액션이 제공하는 현재 사용자의 깃헙 유저명
-          password: ${{ secrets.GITHUB_TOKEN }} # 깃헙 액션이 제공하는 저장소와 인증하기 위한 토큰
       - name: Build container image
         run: |
           chmod +x gradlew

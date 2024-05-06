@@ -64,13 +64,13 @@ tasks.getByName<BootBuildImage>("bootBuildImage") {
     environment = mapOf(
             "BP_JVM_VERSION" to "17.*"  // Java 버전을 문자열로 명시
     )
-    publish = true // 이미지를 레지스트리에 푸시할 것인지 여부
+    /*publish = true // 이미지를 레지스트리에 푸시할 것인지 여부
     docker {
         publishRegistry {
             url.set("${project.findProperty("registryUrl")}")
             username.set("${project.findProperty("registryUsername")}")
             password.set("${project.findProperty("registryToken")}")
         }
-    }
+    }*/
 
 }
