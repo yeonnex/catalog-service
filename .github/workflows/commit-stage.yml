@@ -43,7 +43,7 @@ jobs:
           ./gradlew build
   package:
     name: Package and Publish
-    if: ${{ github.ref == 'ref/heads/master' }} # 잡을 main 브랜치에 대해서만 실행한다
+    if: ${{ github.ref == 'refs/heads/master' }} # 잡을 main 브랜치에 대해서만 실행한다
     needs: [ build ] # 'build' 잡이 성공적으로 수행된 경우에만 이 잡을 실행한다
     runs-on: ubuntu-22.04 # 우분투 22.04 에서 잡을 실행
     permissions:
